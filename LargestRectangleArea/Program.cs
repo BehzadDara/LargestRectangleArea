@@ -27,17 +27,19 @@ static int LargestRectangleArea(int[] heights)
 
     for (int i = 0; i < heights.Length; i++)
     {
-        var left = i;
-        while (left > 0 && heights[left - 1] >= heights[i])
+        var left = i - 1;
+        while (left > 0 && heights[left] >= heights[i])
         {
-            left--;
+            left = furthestHigherLeftNeighbor[left];
         }
         furthestHigherLeftNeighbor[i] = left;
-
-        var right = i;
-        while (right < heights.Length - 1 && heights[right + 1] >= heights[i])
+    }
+    for (int i = heights.Length - 1; i >= 0; i--)
+    { 
+        var right = i + 1;
+        while (right < heights.Length - 1 && heights[right] >= heights[i])
         {
-            right++;
+            right = furthestHigherRightNeighbor[right];
         }
         furthestHigherRightNeighbor[i] = right;
     }
@@ -46,7 +48,7 @@ static int LargestRectangleArea(int[] heights)
 
     for (int i = 0; i < heights.Length; i++)
     {
-        result = Math.Max(result, heights[i] * (furthestHigherRightNeighbor[i] - furthestHigherLeftNeighbor[i] + 1));
+        result = Math.Max(result, heights[i] * (furthestHigherRightNeighbor[i] - furthestHigherLeftNeighbor[i] - 1));
     }
 
     return result;
